@@ -3,6 +3,8 @@ import { ShaktiModule } from './shakti/shakti.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
+import  { join } from 'path';
+
 
 
 
@@ -22,7 +24,10 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         username: configService.get<string>('POSTGRES_USER'),
         password: configService.get<string>('POSTGRES_PASSWORD'),
         database: configService.get<string>('POSTGRES_DB'),
-        entities: [], // Add your entity classes here
+
+
+        // for all entity   it will san all entity
+        entities: [join(__dirname, '**/*.entity.{js,ts}')], // Add your entity classes here
         synchronize: true,
       }),
       inject: [ConfigService],

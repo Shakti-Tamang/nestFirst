@@ -1,10 +1,15 @@
 import { Body, Controller, Get, Param, Post, Query, Req, Res} from '@nestjs/common';
 import { Request, Response } from 'express';
+
 import { shaktidtos } from 'src/shakti/DTOS/shakti.dtos';
+import { jina } from 'src/shakti/Entity/ram.entity';
+import { shaktiService } from 'src/shakti/service/shakti.service';
 
 
 @Controller('shakti')
 export class ShaktiController {
+
+
 
 // Decoretores are just functions:
 
@@ -43,5 +48,19 @@ return{};
 console.log(id);
 return {};
         }
+
+
+constructor(private readonly shaktiSrvice:shaktiService){
+
+}   
+
+@Post('first')
+async create(@Body() dto: jina): Promise<{ message: string; data: jina }> {
+    const createJina = await this.shaktiSrvice.create(dto);
+    return {
+      message: 'Successfully created',
+      data: createJina,
+    };
+}
 
 }
