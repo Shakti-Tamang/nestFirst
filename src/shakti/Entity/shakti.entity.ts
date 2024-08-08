@@ -7,4 +7,6 @@ export class shakti{
   
     @Column()
     name: string;
+    @Column()
+    role:string;
 }
