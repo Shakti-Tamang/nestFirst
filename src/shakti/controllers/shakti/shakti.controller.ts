@@ -1,10 +1,11 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Req, Res} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Req, Res, UsePipes, ValidationPipe} from '@nestjs/common';
 
 import { Request, Response } from 'express';
 
 import { shaktidtos } from 'src/shakti/DTOS/shakti.dtos';
 import { jina } from 'src/shakti/Entity/ram.entity';
-import { shaktiService } from 'src/shakti/service/shakti.service';
+import { shaktiService } from 'src/shakti/services/shakti/shakti.service';
+
 
 
 @Controller('shakti')
@@ -12,9 +13,10 @@ export class ShaktiController {
 // Decoretores are just functions:
 
 // as query parameter:
-// its url will be like localhost:3001/shakti?sortedBy=asc
+// its url will be like localhost:3001/shakti?sortedBy=asc chnage asc to true beacuse it is converted to boolean
+// localhost:3001/shakti?sortedBy=true
 //     @Get()
-//     getUser(@Query('sortBy')sortBy:string){
+//     getUser(@Query('sortBy',ParseBoolPipe)sortBy:boolean){
 //         console.log(sortBy);
 // return {username:'shaktiMan',email:'tamangshakti423@gmail.com'}
 //     }
@@ -56,8 +58,9 @@ constructor(private readonly shaktiSrvice:shaktiService){
 
 // svaing
 @Post('/first')
+@UsePipes(new ValidationPipe())
 async create(@Body() dto: jina): Promise<{ message: string; data: jina }> {
-    const findOneAll = await this.shaktiSrvice.find(dto.role);
+    const findOneAll = await this.shaktiSrvice.find(dto.email);
 
     if (findOneAll!=null && findOneAll.length > 0) {
         console.log("User found");
@@ -90,7 +93,9 @@ async getvalue():Promise<{message: string ; data: jina []}>{
 }
 
 @Get('/get/:id')
-async getOneId(@Param('id') id: string): Promise<{ message: string; data: jina | null }> {
+
+// doing parse will bep to take parameter as integer only number
+async getOneId(@Param('id',ParseIntPipe) id:number): Promise<{ message: string; data: jina | null }> {
     const data = await this.shaktiSrvice.findOne(Number(id));
     return {
         message: data ? 'Successful' : 'Not Found',
@@ -99,8 +104,9 @@ async getOneId(@Param('id') id: string): Promise<{ message: string; data: jina |
 }
 
 
+
 @Delete('/delete/:id')
-async deleteById(@Param('id') id: string): Promise<{ message: string }> {
+async deleteById(@Param('id',ParseIntPipe) id: number): Promise<{ message: string }> {
     await this.shaktiSrvice.deleteById(Number(id));
     return {
         message: 'Successfully deleted',

@@ -1,8 +1,8 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { jina } from 'src/shakti/Entity/ram.entity';
+import { Repository } from 'typeorm';
 
-import { jina } from "../Entity/ram.entity";
-import { Repository } from "typeorm";
 
 
 // providers
@@ -23,10 +23,12 @@ return await this.jinaRepository.save(jinaa);
 
 
     // to check user existed
-    async find(role: string): Promise<jina[]> {
-        return this.jinaRepository.findBy({ role });
+    async find(email: string): Promise<jina[]> {
+        return this.jinaRepository.findBy({ email });
     }
 
+
+    
 
     // getAll
 async findMany(): Promise<jina[]> {

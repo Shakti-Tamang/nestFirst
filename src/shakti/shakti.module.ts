@@ -3,7 +3,9 @@ import { ShaktiController } from './controllers/shakti/shakti.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { shakti } from './Entity/shakti.entity';
 import { jina } from './Entity/ram.entity';
-import { shaktiService } from './service/shakti.service';
+import { shaktiService } from './services/shakti/shakti.service';
+
+
 
 
 
