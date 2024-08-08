@@ -9,7 +9,6 @@ import { shaktiService } from 'src/shakti/service/shakti.service';
 
 @Controller('shakti')
 export class ShaktiController {
-
 // Decoretores are just functions:
 
 // as query parameter:
@@ -53,15 +52,29 @@ constructor(private readonly shaktiSrvice:shaktiService){
 
 }   
 
-// svaing
 
+
+// svaing
 @Post('/first')
 async create(@Body() dto: jina): Promise<{ message: string; data: jina }> {
-    const createJina = await this.shaktiSrvice.create(dto);
-    return {
-      message: 'Successfully created',
-      data: createJina,
-    };
+    const findOneAll = await this.shaktiSrvice.find(dto.role);
+
+    if (findOneAll!=null && findOneAll.length > 0) {
+        console.log("User found");
+        // You might want to handle this case differently, e.g., return an error response
+        return {
+            message: 'User already exists',
+
+            // it returns existing userf
+            data: findOneAll[0], // Assuming you want to return the existing user
+        };
+    } else {
+        const createJina = await this.shaktiSrvice.create(dto);
+        return {
+            message: 'Successfully created',
+            data: createJina,
+        };
+    }
 }
 
 
@@ -85,19 +98,18 @@ async getOneId(@Param('id') id: string): Promise<{ message: string; data: jina |
     };
 }
 
+
 @Delete('/delete/:id')
-async deleteById(@Param('id') id: string): Promise<{ message: string; deleted: boolean }> {
-    const result = await this.shaktiSrvice.deleteById(Number(id));
-    const message = result.deleted ? 'Successfully deleted' : 'Deletion unsuccessful, entity not found';
+async deleteById(@Param('id') id: string): Promise<{ message: string }> {
+    await this.shaktiSrvice.deleteById(Number(id));
     return {
-        message: message,
-        deleted: result.deleted,
+        message: 'Successfully deleted',
     };
 }
 
 
-@Patch('/update')
 
+@Patch('/update')
 async editDetail(@Body() dto:jina):Promise<{ message:string; data:jina }>{
     const createJina = await this.shaktiSrvice.editDetail(dto);
     return {

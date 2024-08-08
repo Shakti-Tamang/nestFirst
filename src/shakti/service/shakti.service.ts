@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 
 import { jina } from "../Entity/ram.entity";
@@ -9,7 +9,7 @@ import { Repository } from "typeorm";
 
 @Injectable()
 export class shaktiService{
-    constructor(@InjectRepository(jina) private readonly jinaRepository:Repository<jina>){
+    constructor(@InjectRepository(jina) private readonly jinaRepository:Repository<jina>){  
 
     }
 
@@ -22,21 +22,24 @@ return await this.jinaRepository.save(jinaa);
     }
 
 
+    // to check user existed
+    async find(role: string): Promise<jina[]> {
+        return this.jinaRepository.findBy({ role });
+    }
+
+
     // getAll
-async  findMany(): Promise<jina[]> {
+async findMany(): Promise<jina[]> {
         return this.jinaRepository.find();
+        
     }
 
 
 
-  
 // The function is expected to return a Promise that resolves to either an object 
 // of type jina or null if no such entity is found.
-async deleteById(id: number): Promise<{ deleted: boolean }> {
-    const result = await this.jinaRepository.delete(id);
-    return {
-        deleted: result.affected !== 0,
-    };
+async deleteById(id: number) {
+    return await this.jinaRepository.delete(id);   
 }
 
 
@@ -52,11 +55,11 @@ async findOne(id: number): Promise<jina | null> {
 // editing
 async editDetail(dto: jina): Promise<jina | null> {
     const shakti = await this.jinaRepository.findOneBy({ id: dto.id });
-    if(!shakti){
-   return null;
+    if (!shakti) {
+        throw new NotFoundException('User not found');
     }
-    Object.assign(shakti,dto);
-     return this.jinaRepository.save(shakti);
+   shakti.role=dto.role;
+   return this.jinaRepository.save(shakti);
 }
 
 }
