@@ -4,6 +4,7 @@ import {  Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 export class jina{
 @PrimaryGeneratedColumn()
 id:number;
+
 @Column()
 role:string;
 }

@@ -1,4 +1,5 @@
-import { Body, Controller, Get, Param, Post, Query, Req, Res} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Req, Res} from '@nestjs/common';
+
 import { Request, Response } from 'express';
 
 import { shaktidtos } from 'src/shakti/DTOS/shakti.dtos';
@@ -9,17 +10,15 @@ import { shaktiService } from 'src/shakti/service/shakti.service';
 @Controller('shakti')
 export class ShaktiController {
 
-
-
 // Decoretores are just functions:
 
 // as query parameter:
 // its url will be like localhost:3001/shakti?sortedBy=asc
-    @Get()
-    getUser(@Query('sortBy')sortBy:string){
-        console.log(sortBy);
-return {username:'shaktiMan',email:'tamangshakti423@gmail.com'}
-    }
+//     @Get()
+//     getUser(@Query('sortBy')sortBy:string){
+//         console.log(sortBy);
+// return {username:'shaktiMan',email:'tamangshakti423@gmail.com'}
+//     }
 
 
 
@@ -54,7 +53,9 @@ constructor(private readonly shaktiSrvice:shaktiService){
 
 }   
 
-@Post('first')
+// svaing
+
+@Post('/first')
 async create(@Body() dto: jina): Promise<{ message: string; data: jina }> {
     const createJina = await this.shaktiSrvice.create(dto);
     return {
@@ -63,4 +64,45 @@ async create(@Body() dto: jina): Promise<{ message: string; data: jina }> {
     };
 }
 
+
+// get all
+@Get()
+async getvalue():Promise<{message: string ; data: jina []}>{
+
+    const shakti=await this.shaktiSrvice.findMany();
+    return{
+        message:'successful',
+        data:shakti
+    }
+}
+
+@Get('/get/:id')
+async getOneId(@Param('id') id: string): Promise<{ message: string; data: jina | null }> {
+    const data = await this.shaktiSrvice.findOne(Number(id));
+    return {
+        message: data ? 'Successful' : 'Not Found',
+        data: data,
+    };
+}
+
+@Delete('/delete/:id')
+async deleteById(@Param('id') id: string): Promise<{ message: string; deleted: boolean }> {
+    const result = await this.shaktiSrvice.deleteById(Number(id));
+    const message = result.deleted ? 'Successfully deleted' : 'Deletion unsuccessful, entity not found';
+    return {
+        message: message,
+        deleted: result.deleted,
+    };
+}
+
+
+@Patch('/update')
+
+async editDetail(@Body() dto:jina):Promise<{ message:string; data:jina }>{
+    const createJina = await this.shaktiSrvice.editDetail(dto);
+    return {
+      message: 'Successfully created',
+      data: createJina,
+    };
+}
 }
