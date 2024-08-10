@@ -7,16 +7,13 @@ import { ShaktiService } from './services/shakti/shakti.service';
 import { ExampleMiddleware } from './middlewares/example/example.middleware';
 import { JinaRepository } from './Repository/shakti.repo';
 import { ShaktiRepository } from './Repository/my.amurepo';
-
-
-
-
-
-
+import {  Personaddress } from './Entity/address.shakti';
+import {  PersonContact } from './Entity/contact.shakti';
+import { AddressRepository } from './Repository/address.rpo';
 
 // set for entity  rfepository pattern 
 @Module({
-    imports:[TypeOrmModule.forFeature([jina,shakti])],
+    imports:[TypeOrmModule.forFeature([jina,shakti,PersonContact,Personaddress])],
   controllers: [ShaktiController],
 
 //   managing services:
@@ -27,6 +24,7 @@ providers: [
   },
   JinaRepository,
   ShaktiRepository,
+  AddressRepository,
 ],
   
 })

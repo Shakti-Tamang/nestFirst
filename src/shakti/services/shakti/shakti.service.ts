@@ -3,18 +3,23 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { jina } from 'src/shakti/Entity/ram.entity';
 import { Repository } from 'typeorm';
 import { ShaktiServiceInterface } from './shakti.serviceinterface';
+import { Personaddress } from 'src/shakti/Entity/address.shakti';
 
 @Injectable()
 export class ShaktiService implements ShaktiServiceInterface {
   constructor(
     @InjectRepository(jina)
     private readonly jinaRepository: Repository<jina>,
+
+    @InjectRepository(Personaddress)
+    private readonly AddressRepository:Repository<Personaddress>,
   ) {}
 
-  // Saving
   async create(dto: jina): Promise<jina> {
-    const jinaa = this.jinaRepository.create(dto);
-    return await this.jinaRepository.save(jinaa);
+    const jinaa = this.jinaRepository.create(dto); // Create the jina entity
+
+    // The address will automatically be saved if provided because of the cascade option
+    return await this.jinaRepository.save(jinaa); // Save the jina entity along with the address
   }
 
   // To check if user exists

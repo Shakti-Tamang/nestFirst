@@ -12,6 +12,8 @@ import  { join } from 'path';
 
 // Typescipt is superset of javascript it means it include all feeaturs of java including additional features
 
+
+// there is prism orm also but i used type orm
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -25,10 +27,13 @@ import  { join } from 'path';
         password: configService.get<string>('POSTGRES_PASSWORD'),
         database: configService.get<string>('POSTGRES_DB'),
 
-
         // for all entity   it will san all entity
+        
+        // autoLoadEntities: true, // Automatically load all entities
+
         entities: [join(__dirname, '**/*.entity.{js,ts}')], // Add your entity classes here
-        synchronize: true,
+        autoLoadEntities: true,
+        synchronize:true,
       }),
       inject: [ConfigService],
     }),

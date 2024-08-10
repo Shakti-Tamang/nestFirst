@@ -9,6 +9,7 @@ import { ShaktiServiceInterface } from 'src/shakti/services/shakti/shakti.servic
 
 
 
+
 @Controller('shakti')
 export class ShaktiController {
 // Decoretores are just functions:
@@ -82,6 +83,7 @@ async create(@Body() dto: jina) {
     }
 }
 
+
 @Get()
 @HttpCode(200) // Changed to 200 OK as it's standard for GET requests
 async getvalue() {
@@ -99,7 +101,6 @@ async getvalue() {
 }
 
 @Get('/get/:id')
-
 // doing parse will bep to take parameter as integer only number  chnage input data type
 // now you must send number in json
 async getOneId(@Param('id',ParseIntPipe) id:number) {

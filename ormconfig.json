@@ -1,13 +1,14 @@
 {
-    "type": "postgres",
-    "host": "localhost",
-    "port": 5432,
-    "username": "postgres",
-    "password": "Shakti",
-    "database": "shaktiAmu",
-    "synchronize": true,
-    "entities": [
-      "src/**/*.entity.ts",
-      "dist/**/*.entity.js"
-    ]
-  }
+  "type": "postgres",
+  "host": "localhost",
+  "port": 5432,
+  "username": "postgres",
+  "password": "Shakti",
+  "database": "jinaShakti",
+  "synchronize": true,
+  "entities": [
+    "src/**/*.entity.ts", 
+    "dist/**/*.entity.js"  
+  ],
+  "logging": true  
+}
