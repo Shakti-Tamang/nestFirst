@@ -1,13 +1,15 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Inject, Param, ParseIntPipe, Patch, Post, Req, Res, UsePipes, ValidationPipe} from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Inject, Param, ParseIntPipe, Patch, Post, Req, Res, UseGuards, UsePipes, ValidationPipe} from '@nestjs/common';
 
 import { Request, Response } from 'express';
 import { AuthService } from 'src/auth-module/auth.service';
+import { JwtAuthGuard } from 'src/auth-module/jwt-auth.guard';
+import { RolesGuard } from 'src/auth-module/roleguard.role';
+import { Roles } from 'src/auth-module/roles.decorator';
 
 import { shaktidtos } from 'src/shakti/DTOS/shakti.dtos';
 import { jina } from 'src/shakti/Entity/ram.entity';
 
 import { ShaktiServiceInterface } from 'src/shakti/services/shakti/shakti.serviceinterface';
-
 
 
 
@@ -109,6 +111,8 @@ async login(@Body() loginDto: jina) {
 
 @Get()
 @HttpCode(200) // Changed to 200 OK as it's standard for GET requests
+@UseGuards(JwtAuthGuard,RolesGuard)
+@Roles('Admin')
 async getvalue() {
     try {
         const shakti = await this.shaktiSrvice.findMany();
@@ -124,6 +128,8 @@ async getvalue() {
 }
 
 @Get('/get/:id')
+@UseGuards(JwtAuthGuard,RolesGuard)
+@Roles('Admin')
 // doing parse will bep to take parameter as integer only number  chnage input data type
 // now you must send number in json
 async getOneId(@Param('id',ParseIntPipe) id:number) {
@@ -142,6 +148,8 @@ async getOneId(@Param('id',ParseIntPipe) id:number) {
 
 
 @Delete('/delete/:id')
+@UseGuards(JwtAuthGuard,RolesGuard)
+@Roles('Admin')
 async deleteById(@Param('id',ParseIntPipe) id: number) {
     await this.shaktiSrvice.deleteById(Number(id));
     return {
@@ -150,8 +158,9 @@ async deleteById(@Param('id',ParseIntPipe) id: number) {
 }
 
 
-
 @Patch('/update')
+@UseGuards(JwtAuthGuard,RolesGuard)
+@Roles('Admin')
 async editDetail(@Body() dto:jina){
 
     try{

@@ -7,6 +7,7 @@ import { ShaktiServiceInterface } from './shakti.serviceinterface';
 import { Personaddress } from 'src/shakti/Entity/address.shakti';
 
 @Injectable()
+
 export class ShaktiService implements ShaktiServiceInterface {
   private readonly saltRounds = 10; // Number of salt rounds for bcrypt
 
@@ -26,9 +27,7 @@ export class ShaktiService implements ShaktiServiceInterface {
     const hashedPassword = await bcrypt.hash(dto.password, this.saltRounds);
 
     // Create a new jina entity with the hashed password
-    const jinaa = this.jinaRepository.create({
-      ...dto,
-      password: hashedPassword, // Set the hashed password
+    const jinaa = this.jinaRepository.create({...dto, password: hashedPassword, // Set the hashed password
     });
 
     // Save the jina entity along with any related entities
