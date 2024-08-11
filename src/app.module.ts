@@ -7,15 +7,13 @@ import { AuthModule } from './auth-module/auth-module.module';
 
 
 
-
-
 // npm install --save @nestjs/typeorm typeorm pg post grace download:
 
 // Typescipt is superset of javascript it means it include all feeaturs of java including additional features
 
 
 // there is prism orm also but i used type orm
-@Module({
+@Module({ 
   imports: [
     ConfigModule.forRoot({
       isGlobal: true, // Make the configuration globally available
