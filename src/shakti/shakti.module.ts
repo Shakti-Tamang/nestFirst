@@ -10,10 +10,11 @@ import { ShaktiRepository } from './Repository/my.amurepo';
 import {  Personaddress } from './Entity/address.shakti';
 import {  PersonContact } from './Entity/contact.shakti';
 import { AddressRepository } from './Repository/address.rpo';
+import { AuthModule } from 'src/auth-module/auth-module.module';
 
 // set for entity  rfepository pattern 
 @Module({
-    imports:[TypeOrmModule.forFeature([jina,shakti,PersonContact,Personaddress])],
+    imports:[TypeOrmModule.forFeature([jina,shakti,PersonContact,Personaddress]),   AuthModule,],
   controllers: [ShaktiController],
 
 //   managing services:

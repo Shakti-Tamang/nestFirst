@@ -1,6 +1,7 @@
 import { Body, Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Inject, Param, ParseIntPipe, Patch, Post, Req, Res, UsePipes, ValidationPipe} from '@nestjs/common';
 
 import { Request, Response } from 'express';
+import { AuthService } from 'src/auth-module/auth.service';
 
 import { shaktidtos } from 'src/shakti/DTOS/shakti.dtos';
 import { jina } from 'src/shakti/Entity/ram.entity';
@@ -51,19 +52,16 @@ console.log(id);
 return {};
         }
 
-
-    
-    
-    
         // its is dependency injection to use and call methods from class  like autowired in java
 
         constructor(
             @Inject('ShaktiServiceInterface') private readonly shaktiSrvice: ShaktiServiceInterface,
+            private readonly authService: AuthService,
         ) {
-
-
         }
-
+       
+            
+    
 
 
 // svaing
@@ -81,6 +79,31 @@ async create(@Body() dto: jina) {
         await this.shaktiSrvice.create(dto);
         return { message: 'User successfully registered' }; // The @HttpCode(201) decorator ensures this returns with a 201 status
     }
+}
+
+@Post('/login')
+async login(@Body() loginDto: jina) {
+  try {
+    // Extract username and password from the entity
+    const { username, password } = loginDto;
+
+    // Validate the user credentials
+    const user = await this.authService.validateUser(username, password);
+    if (!user) {
+      throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
+    }
+
+    // Generate JWT token
+    const token = await this.authService.login(user);
+
+    return {
+      message: 'Login successful',
+      access_token: token.access_token,
+    };
+  } catch (error) {
+    console.error('Error during login:', error);
+    throw new HttpException('Internal server error', HttpStatus.INTERNAL_SERVER_ERROR);
+  }
 }
 
 

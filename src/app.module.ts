@@ -2,8 +2,9 @@ import { Module } from '@nestjs/common';
 import { ShaktiModule } from './shakti/shakti.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-
 import  { join } from 'path';
+import { AuthModule } from './auth-module/auth-module.module';
+
 
 
 
@@ -16,7 +17,9 @@ import  { join } from 'path';
 // there is prism orm also but i used type orm
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({
+      isGlobal: true, // Make the configuration globally available
+    }), 
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
@@ -37,7 +40,8 @@ import  { join } from 'path';
       }),
       inject: [ConfigService],
     }),
-    ShaktiModule],
+    ShaktiModule,
+    AuthModule],
   controllers: [],
   providers: [],
 })

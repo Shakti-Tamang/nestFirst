@@ -25,7 +25,6 @@ city:string;
 zipcode:string;
 
 @OneToOne(() => jina, (jina) => jina.add) // Corrected: use 'jina' instead of 'Jina'
-
 jina: jina;
 
 }

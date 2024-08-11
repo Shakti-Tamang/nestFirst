@@ -2,11 +2,14 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { jina } from 'src/shakti/Entity/ram.entity';
 import { Repository } from 'typeorm';
+import * as bcrypt from 'bcrypt';
 import { ShaktiServiceInterface } from './shakti.serviceinterface';
 import { Personaddress } from 'src/shakti/Entity/address.shakti';
 
 @Injectable()
 export class ShaktiService implements ShaktiServiceInterface {
+  private readonly saltRounds = 10; // Number of salt rounds for bcrypt
+
   constructor(
     @InjectRepository(jina)
     private readonly jinaRepository: Repository<jina>,
@@ -15,12 +18,29 @@ export class ShaktiService implements ShaktiServiceInterface {
     private readonly AddressRepository:Repository<Personaddress>,
   ) {}
 
-  async create(dto: jina): Promise<jina> {
-    const jinaa = this.jinaRepository.create(dto); // Create the jina entity
+  // Asynchronous means performing tasks in the background without blocking the main
+  //  thread, 
 
-    // The address will automatically be saved if provided because of the cascade option
-    return await this.jinaRepository.save(jinaa); // Save the jina entity along with the address
+  async create(dto: jina): Promise<jina> {
+    // Hash the password before saving
+    const hashedPassword = await bcrypt.hash(dto.password, this.saltRounds);
+
+    // Create a new jina entity with the hashed password
+    const jinaa = this.jinaRepository.create({
+      ...dto,
+      password: hashedPassword, // Set the hashed password
+    });
+
+    // Save the jina entity along with any related entities
+    return await this.jinaRepository.save(jinaa);
   }
+
+
+  // Here, async allows the function to wait for this.jinaRepository.findOneBy({ id }) 
+  // to complete before returning the result. This means your application can 
+  // handle other operations in the meantime, rather than being stuck waiting for
+  //  the database query to finish.
+
 
   // To check if user exists
   async find(email: string): Promise<jina[]> {
