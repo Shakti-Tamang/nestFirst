@@ -36,7 +36,6 @@ export class ShaktiModule implements NestModule {
       consumer.apply(ExampleMiddleware).forRoutes({
               path: 'shakti',
               method: RequestMethod.GET,
-
           },
           {
             path: 'shakti/update',

@@ -42,13 +42,14 @@ export class ShaktiService implements ShaktiServiceInterface {
 
 
   // To check if user exists
-  async find(email: string): Promise<jina[]> {
-    return this.jinaRepository.find({ where: { email } });
+  async find(email: string): Promise<jina> {
+    return await this.jinaRepository.findOne({ where: { email } });
   }
+
 
   // Get all
   async findMany(): Promise<jina[]> {
-    return this.jinaRepository.find();
+    return await this.jinaRepository.find();
   }
 
   // Delete by ID
@@ -57,8 +58,14 @@ export class ShaktiService implements ShaktiServiceInterface {
   }
 
   // Get one by ID
+  // it we dont use await it will return promise without findone 
+  // Yes, await is important because it pauses the execution of the function until the 
+  // Promise returned by findOneBy resolves, ensuring that the function returns the 
+  // resolved value rather than the Promise itself.
+
+  //   | it is nuion to keep two values  to take value from id
   async findOne(id: number): Promise<jina | null> {
-    return this.jinaRepository.findOneBy({ id });
+    return  await this.jinaRepository.findOneBy({ id });
   }
 
   // Editing
@@ -69,6 +76,6 @@ export class ShaktiService implements ShaktiServiceInterface {
     }
     shakti.role = dto.role;
     shakti.username = dto.username;
-    return this.jinaRepository.save(shakti);
+    return await this.jinaRepository.save(shakti);
   }
 }

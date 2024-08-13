@@ -2,7 +2,7 @@ import { jina } from "src/shakti/Entity/ram.entity";
 
 export interface ShaktiServiceInterface {
     create(dto: jina): Promise<jina>;
-    find(email: string): Promise<jina[]>;
+    find(email: string): Promise<jina>;
 
     findMany(): Promise<jina[]>;
     

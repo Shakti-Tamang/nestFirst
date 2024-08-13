@@ -73,7 +73,7 @@ return {};
 async create(@Body() dto: jina) {
     const findOneAll = await this.shaktiSrvice.find(dto.email);
 
-    if (findOneAll != null && findOneAll.length > 0) {
+    if (findOneAll != null ) {
         // If the user already exists, throw an exception with a 409 Conflict status
         throw new HttpException('User already exists', HttpStatus.CONFLICT);
     } else {
@@ -86,11 +86,17 @@ async create(@Body() dto: jina) {
 @Post('/login')
 async login(@Body() loginDto: jina) {
   try {
-    // Extract username and password from the entity
-    const { username, password } = loginDto;
+    // Find the user by email
+    const findOneAll = await this.shaktiSrvice.find(loginDto.email);
+    if (!findOneAll) {
+      throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
+    }
 
-    // Validate the user credentials
-    const user = await this.authService.validateUser(username, password);
+    // Extract username and password from the found user
+    const { username} = findOneAll;
+
+    // Validate the user credentials using the username and password
+    const user = await this.authService.validateUser(username, loginDto.password);
     if (!user) {
       throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
     }

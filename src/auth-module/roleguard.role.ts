@@ -6,6 +6,7 @@ import { Request } from 'express';
 import { jina } from 'src/shakti/Entity/ram.entity';
 
 @Injectable()
+// conActivete is predEfined class:
 export class RolesGuard implements CanActivate {
   constructor(private reflector: Reflector) {}
 
